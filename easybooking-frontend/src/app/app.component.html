@@ -1,0 +1,14 @@
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">EasyBooking</a>
+    <div class="navbar-nav ms-auto" *ngIf="isLoggedIn()">
+      <a class="nav-link" routerLink="/rooms">Salles</a>
+      <a class="nav-link" routerLink="/my-bookings">Mes Réservations</a>
+      <button class="btn btn-outline-danger btn-sm ms-3" (click)="logout()">Déconnexion</button>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <router-outlet></router-outlet>
+</main>
