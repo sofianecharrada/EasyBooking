@@ -31,19 +31,32 @@ export class RoomsComponent implements OnInit {
       this.loadRooms();
     }
   }
-  loadRooms(): void {
-    this.api.getRooms(this.selectedDate, this.selectedTime, this.minCapacity).subscribe({
-      next: (data: any) => {
-        // Le setTimeout(..., 0) repousse l'affectation au prochain cycle de rendu
-        // Cela garantit qu'Angular ne détectera pas de changement "pendant" sa vérification
-        setTimeout(() => {
-          this.rooms = data;
-          this.cdr.detectChanges();
-        }, 0);
-      },
-      error: (err) => console.error('Erreur API :', err),
-    });
-  }
+
+  // Variables à ajouter/modifier
+startTime: string = '09:00';
+endTime: string = '10:00';
+
+loadRooms(): void {
+  // On envoie startTime et endTime au lieu d'un seul timeslot
+  this.api.getRooms(this.selectedDate, this.startTime, this.endTime, this.minCapacity).subscribe({
+    next: (data: any) => {
+      setTimeout(() => {
+        this.rooms = data;
+        this.cdr.detectChanges();
+      }, 0);
+    }
+  });
+}
+
+bookRoom(roomId: string): void {
+  const bookingData = {
+    roomId,
+    date: this.selectedDate,
+    startTime: this.startTime,
+    endTime: this.endTime
+  };
+  // ... appel api.createBooking
+}
 
   onDateChange(event: any): void {
     // On récupère la valeur du calendrier
@@ -57,27 +70,5 @@ export class RoomsComponent implements OnInit {
   onTimeChange(): void {
     // On recharge les salles pour voir si elles sont libres à cette NOUVELLE heure
     this.loadRooms();
-  }
-
-  // C'est cette fonction qui manquait dans ton fichier !
-  bookRoom(roomId: string): void {
-    if (!this.selectedDate) {
-      alert("Veuillez d'abord choisir une date !");
-      return;
-    }
-
-    const bookingData = {
-      roomId: roomId,
-      date: this.selectedDate,
-      timeslot: this.selectedTime,
-    };
-
-    this.api.createBooking(bookingData).subscribe({
-      next: () => {
-        alert(`Réservation réussie pour ${this.selectedTime} !`);
-        this.loadRooms(); // Rafraîchit l'affichage
-      },
-      error: (err) => alert(err.error?.message || 'Erreur lors de la réservation'),
-    });
   }
 }

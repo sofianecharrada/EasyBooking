@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
@@ -8,23 +8,20 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object // Détecte si on est sur le navigateur
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  // Fonction privée pour centraliser la récupération du Token
   private getHeaders(): HttpHeaders {
     let token = '';
-    
-    // On ne touche au localStorage QUE si on est dans le navigateur
     if (isPlatformBrowser(this.platformId)) {
       token = localStorage.getItem('token') || '';
     }
-
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
   }
 
+  // --- Authentification ---
   register(userData: any) {
     return this.http.post(`${this.baseUrl}/auth/register`, userData);
   }
@@ -33,30 +30,37 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/auth/login`, credentials);
   }
 
- getRooms(date: string, timeslot: string, minCapacity?: number) {
-  let url = `${this.baseUrl}/rooms?date=${date}&timeslot=${timeslot}`;
-  if (minCapacity) {
-    url += `&minCapacity=${minCapacity}`;
+  // --- Salles ---
+  // MODIFIÉ : Ajout de startTime et endTime
+  getRooms(date: string, startTime: string, endTime: string, minCapacity?: number) {
+    let params = new HttpParams()
+      .set('date', date)
+      .set('startTime', startTime)
+      .set('endTime', endTime);
+
+    if (minCapacity && minCapacity > 0) {
+      params = params.set('minCapacity', minCapacity.toString());
+    }
+
+    return this.http.get(`${this.baseUrl}/rooms`, { params });
   }
-  return this.http.get(url);
-}
+
+  // --- Réservations ---
   createBooking(bookingData: any) {
-    // Utilisation de la fonction sécurisée pour les headers
     return this.http.post(`${this.baseUrl}/bookings`, bookingData, { 
       headers: this.getHeaders() 
     });
   }
 
   getUserBookings() {
-    // Utilisation de la fonction sécurisée pour les headers
     return this.http.get(`${this.baseUrl}/bookings/my-bookings`, { 
       headers: this.getHeaders() 
     });
   }
 
   cancelBooking(bookingId: string) {
-  return this.http.delete(`${this.baseUrl}/bookings/${bookingId}`, { 
-    headers: this.getHeaders() 
-  });
-}
+    return this.http.delete(`${this.baseUrl}/bookings/${bookingId}`, { 
+      headers: this.getHeaders() 
+    });
+  }
 }

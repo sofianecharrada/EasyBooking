@@ -4,21 +4,56 @@
     <input type="date" class="form-control" [(ngModel)]="selectedDate">
   </div>
 
-  <div class="col-md-3">
-    <label class="form-label fw-bold text-muted small">Heure</label>
-    <select class="form-select" [(ngModel)]="selectedTime">
+  <div class="col-md-2">
+    <label class="form-label fw-bold text-muted small">Début</label>
+    <select class="form-select" [(ngModel)]="startTime">
       <option *ngFor="let slot of timeslots" [value]="slot">{{ slot }}</option>
     </select>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
+    <label class="form-label fw-bold text-muted small">Fin</label>
+    <select class="form-select" [(ngModel)]="endTime">
+      <option *ngFor="let slot of timeslots" [value]="slot">{{ slot }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
     <label class="form-label fw-bold text-muted small">Capacité min.</label>
-    <input type="number" class="form-control" [(ngModel)]="minCapacity" placeholder="Ex: 10">
+    <input type="number" class="form-control" [(ngModel)]="minCapacity">
   </div>
 
   <div class="col-md-3">
-    <button class="btn btn-primary w-100 fw-bold" (click)="loadRooms()">
-      Filtrer les salles
-    </button>
+    <button class="btn btn-primary w-100 fw-bold" (click)="loadRooms()">Vérifier</button>
   </div>
+</div>
+
+<div class="row g-4" *ngIf="rooms.length > 0">
+  <div class="col-md-4" *ngFor="let room of rooms">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h5 class="fw-bold mb-0">{{ room.name }}</h5>
+          <span [class]="room.isAvailable ? 'badge bg-success' : 'badge bg-danger'">
+            {{ room.isAvailable ? 'Libre' : 'Occupée' }}
+          </span>
+        </div>
+        
+        <p class="text-muted small">Capacité : {{ room.capacity }} personnes</p>
+        <p class="small text-secondary">{{ room.description }}</p>
+
+        <button class="btn w-100 py-2 fw-bold mt-3" 
+                [ngClass]="room.isAvailable ? 'btn-primary' : 'btn-light disabled'"
+                [disabled]="!room.isAvailable"
+                (click)="bookRoom(room._id)">
+          {{ room.isAvailable ? 'Réserver à ' + selectedTime : 'Déjà réservée' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="rooms.length === 0" class="alert alert-warning mt-4 rounded-4">
+  <i class="bi bi-exclamation-triangle me-2"></i>
+  Aucune salle ne correspond à votre recherche pour le {{ selectedDate }} à {{ selectedTime }}.
 </div>
