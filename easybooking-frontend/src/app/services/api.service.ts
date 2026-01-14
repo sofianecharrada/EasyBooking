@@ -63,4 +63,8 @@ export class ApiService {
       headers: this.getHeaders() 
     });
   }
+
+  addRoom(roomData: any) {
+  return this.http.post(`${this.baseUrl}/rooms/add`, roomData);
+}
 }

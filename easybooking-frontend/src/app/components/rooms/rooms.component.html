@@ -6,15 +6,15 @@
 
   <div class="col-md-2">
     <label class="form-label fw-bold text-muted small">Début</label>
-    <select class="form-select" [(ngModel)]="startTime">
+    <select class="form-select" [(ngModel)]="startTime" (change)="onTimeChange()">
       <option *ngFor="let slot of timeslots" [value]="slot">{{ slot }}</option>
     </select>
   </div>
 
   <div class="col-md-2">
     <label class="form-label fw-bold text-muted small">Fin</label>
-    <select class="form-select" [(ngModel)]="endTime">
-      <option *ngFor="let slot of timeslots" [value]="slot">{{ slot }}</option>
+    <select class="form-select" [(ngModel)]="endTime" (change)="onTimeChange()">
+      <option *ngFor="let slot of getAvailableEndTimes()" [value]="slot">{{ slot }}</option>
     </select>
   </div>
 
@@ -26,7 +26,17 @@
   <div class="col-md-3">
     <button class="btn btn-primary w-100 fw-bold" (click)="loadRooms()">Vérifier</button>
   </div>
+  <button class="btn btn-dark rounded-pill px-4 shadow-sm" (click)="navigateToAddRoom()">
+    <i class="bi bi-plus-lg me-2"></i>Ajouter une salle
+  </button>
+
 </div>
+
+<div *ngIf="!isTimeRangeValid()" class="alert alert-danger mt-3">
+  L'heure de fin doit être strictement après l'heure de début.
+</div>
+
+
 
 <div class="row g-4" *ngIf="rooms.length > 0">
   <div class="col-md-4" *ngFor="let room of rooms">
@@ -38,15 +48,13 @@
             {{ room.isAvailable ? 'Libre' : 'Occupée' }}
           </span>
         </div>
-        
+
         <p class="text-muted small">Capacité : {{ room.capacity }} personnes</p>
         <p class="small text-secondary">{{ room.description }}</p>
 
-        <button class="btn w-100 py-2 fw-bold mt-3" 
-                [ngClass]="room.isAvailable ? 'btn-primary' : 'btn-light disabled'"
-                [disabled]="!room.isAvailable"
-                (click)="bookRoom(room._id)">
-          {{ room.isAvailable ? 'Réserver à ' + selectedTime : 'Déjà réservée' }}
+        <button class="btn w-100 py-2 fw-bold mt-3" [ngClass]="room.isAvailable ? 'btn-primary' : 'btn-light disabled'"
+          [disabled]="!room.isAvailable" (click)="bookRoom(room)">
+          {{ room.isAvailable ? ('Réserver (' + startTime + ' - ' + endTime + ')') : 'Déjà réservée' }}
         </button>
       </div>
     </div>
@@ -55,5 +63,5 @@
 
 <div *ngIf="rooms.length === 0" class="alert alert-warning mt-4 rounded-4">
   <i class="bi bi-exclamation-triangle me-2"></i>
-  Aucune salle ne correspond à votre recherche pour le {{ selectedDate }} à {{ selectedTime }}.
+  Aucune salle ne correspond à votre recherche pour le {{ selectedDate }} de {{ startTime }} à {{ endTime }}.
 </div>
