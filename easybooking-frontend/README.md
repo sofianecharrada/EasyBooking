@@ -1,59 +1,178 @@
-# EasybookingFrontend
+📘 EasyBooking – Application de réservation de salles
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.5.
+EasyBooking est une application web permettant aux utilisateurs de :
 
-## Development server
+créer un compte
 
-To start a local development server, run:
+se connecter
 
-```bash
-ng serve
-```
+consulter des salles disponibles
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+réserver une salle pour un créneau horaire
 
-## Code scaffolding
+consulter leurs réservations
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Le projet est composé :
 
-```bash
-ng generate component component-name
-```
+d’un backend (Node.js / Express / MongoDB)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+d’un frontend (Angular)
 
-```bash
-ng generate --help
-```
+d’une suite complète de tests automatisés
 
-## Building
+🧱 Architecture du projet
+EasyBooking-main/
+├── backend/                 → API (Node.js / Express)
+│   ├── src/                 → Code applicatif
+│   ├── tests/               → Tests unitaires, intégration, sécurité
+│   └── server.js
+│
+├── easybooking-frontend/    → Frontend Angular
+│   ├── src/                 → Interface utilisateur
+│   └── cypress/             → Tests End-to-End (Cypress)
+│
+└── README.md
 
-To build the project run:
+✅ Prérequis
 
-```bash
-ng build
-```
+Avant de commencer, assurez-vous d’avoir :
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Node.js 18 LTS
 
-## Running unit tests
+npm (fourni avec Node.js)
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+MongoDB (local ou distant via MongoDB Atlas)
 
-```bash
-ng test
-```
+Vérification :
 
-## Running end-to-end tests
+node -v
+npm -v
 
-For end-to-end (e2e) testing, run:
+🚀 Installation et lancement du BACKEND (API)
 
-```bash
-ng e2e
-```
+📍 Dossier : backend
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+1️⃣ Installation des dépendances
+cd backend
+npm install
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+👉 Installe Express, Mongoose, Jest, Supertest, etc.
+
+2️⃣ Configuration de l’environnement
+
+Créer ou vérifier le fichier .env :
+
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/easybooking
+JWT_SECRET=secret
+
+3️⃣ Lancer le serveur backend
+npm start
+
+
+Résultat attendu :
+
+Serveur EasyBooking lancé sur le port 3000
+Connecté à MongoDB
+
+
+L’API est disponible sur :
+
+http://localhost:3000
+
+🎨 Installation et lancement du FRONTEND (Angular)
+
+📍 Dossier : easybooking-frontend
+
+1️⃣ Installation des dépendances
+cd easybooking-frontend
+npm install
+
+
+👉 Installe Angular, Cypress et les dépendances UI.
+
+2️⃣ Lancer l’application frontend
+npm start
+
+
+Résultat attendu :
+
+Local: http://localhost:4200
+
+
+L’application est accessible sur :
+
+http://localhost:4200
+
+🧪 Tests automatisés
+🔹 Tests unitaires (Jest)
+
+📍 backend
+
+npm run test:unit
+
+
+👉 Vérifie les modèles, middlewares et règles métiers isolées.
+
+🔹 Tests d’intégration (API)
+npm run test:integration
+
+
+👉 Teste les routes API complètes avec Supertest.
+
+🔹 Tests de sécurité
+npm run test:security
+
+
+👉 Vérifie :
+
+accès non autorisés
+
+tentatives d’injection
+
+exposition d’erreurs internes
+
+robustesse de l’API
+
+🔹 Tests End-to-End (Cypress)
+
+📍 easybooking-frontend
+
+Mode interactif (démo)
+npx cypress open
+
+
+Puis :
+
+E2E Testing
+
+Chrome
+
+Fichier easybooking.e2e.cy.js
+
+Mode automatique (CI)
+npx cypress run
+
+
+👉 Simule le parcours réel d’un utilisateur (connexion, navigation, réservation).
+
+🔁 Automatisation des tests (CI/CD)
+
+Tous les tests sont :
+
+scriptés
+
+versionnés dans Git
+
+exécutables automatiquement
+
+Ils peuvent être intégrés dans une chaîne CI (GitHub Actions, GitLab CI) à chaque push ou pull request.
+
+🧠 Notes importantes
+
+Les erreurs backend sont volontairement tolérées en E2E pour ne pas bloquer les tests front.
+
+Certaines failles de sécurité sont volontairement détectées et documentées.
+
+Le projet privilégie une approche réaliste de la qualité logicielle.
