@@ -1,30 +1,31 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
 
 const app = express();
-
-// Middlewares globaux
-app.use(cors());
 app.use(express.json());
 
-// Connexion à MongoDB
+// Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("Connecté à MongoDB"))
-  .catch(err => console.log("Erreur de connexion :", err));
+  .then(() => {
+    if (process.env.NODE_ENV !== "test") {
+      console.log("Connecté à MongoDB");
+    }
+  })
+  .catch(err => console.error("Erreur MongoDB :", err));
 
-// Import des fichiers de routes
-const authRoutes = require('./src/routes/authRoutes');
-const roomRoutes = require('./src/routes/roomRoutes');
-const bookingRoutes = require('./src/routes/bookingRoutes');
+// Routes
+app.use("/api/auth", require("./src/routes/authRoutes"));
+app.use("/api/rooms", require("./src/routes/roomRoutes"));
+app.use("/api/bookings", require("./src/routes/bookingRoutes"));
 
-// Utilisation des routes
-app.use('/api/auth', authRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/bookings', bookingRoutes);
+// ⚠️ Démarrer le serveur UNIQUEMENT hors tests
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Serveur EasyBooking lancé sur le port ${PORT}`);
+  });
+}
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Serveur EasyBooking lancé sur le port ${PORT}`);
-});
+// ✅ Export EXPRESS APP (OBLIGATOIRE pour Supertest)
+module.exports = app;
