@@ -1,77 +1,178 @@
-# 📘 EasyBooking – Système de Réservation de Salles
+📘 EasyBooking – Application de réservation de salles
 
-**EasyBooking** est une application web moderne permettant de gérer et réserver des salles de réunion. Le projet met l'accent sur la **qualité logicielle**, avec une architecture propre et une couverture de tests complète.
+EasyBooking est une application web permettant aux utilisateurs de :
 
+créer un compte
 
+se connecter
 
----
+consulter des salles disponibles
 
-## 🚀 Fonctionnalités
-* **Authentification sécurisée** : Création de compte et connexion via JWT.
-* **Gestion des Salles** : Consultation avec filtres de capacité et équipements.
-* **Réservations par plage horaire** : Système anti-chevauchement (Heure de début / Heure de fin).
-* **Tableau de bord** : Consultation et annulation des réservations personnelles.
+réserver une salle pour un créneau horaire
 
----
+consulter leurs réservations
 
-## 🧱 Architecture du Projet
+Le projet est composé :
 
-```text
+d’un backend (Node.js / Express / MongoDB)
+
+d’un frontend (Angular)
+
+d’une suite complète de tests automatisés
+
+🧱 Architecture du projet
 EasyBooking-main/
-├── backend/                # API REST (Node.js / Express)
-│   ├── src/                # Logique métier (Modèles, Contrôleurs)
-│   ├── tests/              # Jest (Unit, Integration, Security)
-│   └── server.js           # Point d'entrée
-├── easybooking-frontend/   # Interface Utilisateur (Angular)
-│   ├── src/                # Composants et Services
-│   └── cypress/            # Tests End-to-End
+├── backend/                 → API (Node.js / Express)
+│   ├── src/                 → Code applicatif
+│   ├── tests/               → Tests unitaires, intégration, sécurité
+│   └── server.js
+│
+├── easybooking-frontend/    → Frontend Angular
+│   ├── src/                 → Interface utilisateur
+│   └── cypress/             → Tests End-to-End (Cypress)
+│
 └── README.md
 
-```
+✅ Prérequis
 
-🛠️ Installation et Lancement
-1. Configuration du Backend
-Aller dans le dossier : cd backend
+Avant de commencer, assurez-vous d’avoir :
 
-Installer les dépendances : npm install
+Node.js 18 LTS
 
-Créer un fichier .env avec :
+npm (fourni avec Node.js)
 
-Extrait de code
+MongoDB (local ou distant via MongoDB Atlas)
+
+Vérification :
+
+node -v
+npm -v
+
+🚀 Installation et lancement du BACKEND (API)
+
+📍 Dossier : backend
+
+1️⃣ Installation des dépendances
+cd backend
+npm install
+
+
+👉 Installe Express, Mongoose, Jest, Supertest, etc.
+
+2️⃣ Configuration de l’environnement
+
+Créer ou vérifier le fichier .env :
 
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/easybooking
-JWT_SECRET=secret_key
-Lancer : npm start
+JWT_SECRET=secret
 
-2. Configuration du Frontend
-Aller dans le dossier : cd easybooking-frontend
+3️⃣ Lancer le serveur backend
+npm start
 
-Installer les dépendances : npm install
 
-Lancer : npm start
+Résultat attendu :
 
-Accéder à l'app : http://localhost:4200
+Serveur EasyBooking lancé sur le port 3000
+Connecté à MongoDB
 
-🧪 Stratégie de Tests
-✅ Backend (Jest)
-Unitaires : npm run test:unit
 
-Intégration : npm run test:integration
+L’API est disponible sur :
 
-Sécurité : npm run test:security
+http://localhost:3000
 
-✅ Frontend (Cypress)
-Mode Interactif : npx cypress open
+🎨 Installation et lancement du FRONTEND (Angular)
 
-Mode Automatique : npx cypress run
+📍 Dossier : easybooking-frontend
 
-🧠 Notes Techniques
-CORS : Configuré pour autoriser localhost:4200.
+1️⃣ Installation des dépendances
+cd easybooking-frontend
+npm install
 
-Base de données : MongoDB (Local ou Atlas).
 
-Validation : Logique de collision d'horaires implémentée côté serveur.
+👉 Installe Angular, Cypress et les dépendances UI.
 
-👨‍💻 Auteur
-Sofiane - Développeur Fullstack
+2️⃣ Lancer l’application frontend
+npm start
+
+
+Résultat attendu :
+
+Local: http://localhost:4200
+
+
+L’application est accessible sur :
+
+http://localhost:4200
+
+🧪 Tests automatisés
+🔹 Tests unitaires (Jest)
+
+📍 backend
+
+npm run test:unit
+
+
+👉 Vérifie les modèles, middlewares et règles métiers isolées.
+
+🔹 Tests d’intégration (API)
+npm run test:integration
+
+
+👉 Teste les routes API complètes avec Supertest.
+
+🔹 Tests de sécurité
+npm run test:security
+
+
+👉 Vérifie :
+
+accès non autorisés
+
+tentatives d’injection
+
+exposition d’erreurs internes
+
+robustesse de l’API
+
+🔹 Tests End-to-End (Cypress)
+
+📍 easybooking-frontend
+
+Mode interactif (démo)
+npx cypress open
+
+
+Puis :
+
+E2E Testing
+
+Chrome
+
+Fichier easybooking.e2e.cy.js
+
+Mode automatique (CI)
+npx cypress run
+
+
+👉 Simule le parcours réel d’un utilisateur (connexion, navigation, réservation).
+
+🔁 Automatisation des tests (CI/CD)
+
+Tous les tests sont :
+
+scriptés
+
+versionnés dans Git
+
+exécutables automatiquement
+
+Ils peuvent être intégrés dans une chaîne CI (GitHub Actions, GitLab CI) à chaque push ou pull request.
+
+🧠 Notes importantes
+
+Les erreurs backend sont volontairement tolérées en E2E pour ne pas bloquer les tests front.
+
+Certaines failles de sécurité sont volontairement détectées et documentées.
+
+Le projet privilégie une approche réaliste de la qualité logicielle.
