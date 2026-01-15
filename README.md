@@ -27,6 +27,8 @@ EasyBooking-main/
 │   └── cypress/            # Tests End-to-End
 └── README.md
 
+```
+
 🛠️ Installation et Lancement
 1. Configuration du Backend
 Aller dans le dossier : cd backend
